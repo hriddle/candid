@@ -1,4 +1,4 @@
-package edu.depaul.cdm.se.sampleproject;
+package edu.depaul.cdm.se.candid;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

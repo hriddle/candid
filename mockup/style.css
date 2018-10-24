@@ -1,0 +1,372 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: black;
+  color: white;
+}
+
+/* TEXT STYLES */
+h1, h2, h3, h4, h5, h6 {
+  /*RESET*/
+  padding: 0;
+  margin: 0;
+  font-family: 'Merriweather', serif;
+  font-style: italic;
+}
+
+h1 {
+  font-size: 92px;
+  font-weight: 700;
+  letter-spacing: -1.5px;
+}
+
+h2 {
+  font-size: 56px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+h3 {
+  font-size: 44px;
+  font-weight: 700;
+}
+
+h4 {
+  font-size: 32px;
+  font-weight: 200;
+  letter-spacing: .25px;
+}
+
+h5 {
+  font-size: 24px;
+  font-weight: 200;
+}
+
+h6 {
+  font-size: 20px;
+  line-height: 24px;
+  font-weight: 400;
+  letter-spacing: .25px;
+}
+
+.body1, .body2, .subtitle1, .subtitle2, .button, .caption, .overline, .col, .header {
+  font-family: 'Roboto', Arial, sans-serif;
+}
+
+.body1 {
+  font-size: 16px;
+  font-weight: 200;
+  letter-spacing: .5px;
+}
+
+.body2, .col {
+  font-size: 14px;
+  font-weight: 200;
+  letter-spacing: .25px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.subtitle1 {
+  font-size: 16px;
+  font-weight: 200;
+  letter-spacing: .15px;
+}
+
+.subtitle2 {
+  font-size: 14px;
+  font-weight: 200;
+  letter-spacing: .1px;
+}
+
+.button {
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 1.25px;
+  text-transform: uppercase;
+}
+
+.caption {
+  font-size: 12px;
+  font-weight: 200;
+  letter-spacing: .4px;
+}
+
+.overline, .header {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.white60 {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.white85 {
+  color: rgba(255, 255, 255, 0.85)
+}
+
+.center {
+  text-align: center;
+}
+
+.primary {
+  color: #0d47a1;
+}
+
+.secondary {
+  color: #4dd0e1;
+}
+
+.base {
+  color: #212121;
+}
+
+/* COMPONENTS */
+#app-bar {
+  width: 100%;
+  height: 56px;
+  padding: 15px;
+}
+
+.surface.black {
+  background-color: #000000;
+  color: #FFFFFF;
+}
+
+.surface.primary {
+  background-color: #0D47A1;
+  color: #FFFFFF;
+}
+
+.surface.base {
+  background-color: #212121;
+  color: #FFFFFF;
+  border-radius: 4px;
+}
+
+button {
+  width: auto;
+  padding: 8px 16px;
+  height: 36px;
+  background: transparent;
+  border: none;
+}
+
+button.outline {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+button:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+button:focus {
+  background-color: rgba(255, 255, 255, 0.16);
+  outline: none;
+}
+
+textarea {
+  outline: none;
+  border: none;
+  padding: 5px;
+  color: white;
+}
+
+select, input {
+  background-color: transparent;
+  border: none;
+  height: 56px;
+}
+
+select, textarea, input {
+  background-color: rgba(255, 255, 255, .08);
+  border-bottom: 3px solid transparent;
+}
+
+select:focus, textarea:focus, input:focus {
+  border-bottom: 3px solid #0d47a1;
+  outline: none;
+}
+
+/* DIV TABLES */
+.table {
+  width: 100%;
+  display: table;
+}
+
+.row {
+  display: table-row;
+}
+
+.col {
+  display: table-cell;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 17px 31px;
+  height: 49px;
+}
+
+.table > .row:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.table-header {
+  height: 72px;
+  padding: 18px 31px;
+}
+
+.table-header > * {
+  display: inline-block;
+}
+
+.table-header > button {
+  float: right;
+}
+
+/* BASE PAGE */
+
+#container {
+  height: 100%;
+  width: 100%;
+  background-color: black;
+}
+
+#background {
+  background: #000000;
+}
+
+/* FEEDBACK TABLES PAGE */
+
+.feedback-tables {
+  width: 100%;
+  padding: 24px;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-evenly;
+  align-items: stretch;
+}
+
+.feedback-tables > div {
+  margin: 24px;
+}
+
+.half {
+  flex-grow: 1;
+  margin: auto;
+}
+
+.row.unread > .col {
+  font-weight: 500;
+  color: rgba(77, 208, 225, 0.6);
+}
+
+/* FEEDBACK DETAIL PAGE */
+
+#feedback {
+  width: 100%;
+  padding: 24px;
+}
+
+#feedback > .feedback-detail {
+  width: 650px;
+  margin: 0 auto;
+  padding: 18px 31px;
+}
+
+.feedback-info > .group {
+  display: inline-block;
+  padding: 0 18px 18px 0;
+}
+
+.feedback-body {
+  padding-bottom: 18px;
+}
+
+#feedback-actions {
+  height: 36px;
+  box-sizing: content-box;
+}
+
+#feedback-actions > button {
+  float: right;
+}
+
+#feedback-replies {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0 0 18px 31px;
+}
+
+#feedback-replies > .reply, #feedback-replies > #reply-form {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 18px 0;
+}
+
+#feedback-replies > .reply > span {
+  display: block;
+}
+
+#reply-form {
+  display: none;
+}
+
+#reply-form > textarea {
+  width: 100%;
+}
+
+#reply-form > .actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+#reply-form > .actions > button {
+  display: inline-block;
+}
+
+/* GIVE FEEDBACK */
+#feedback > .feedback-form {
+    width: 650px;
+    margin: 0 auto;
+    padding: 18px 31px;
+    position: relative;
+}
+
+.feedback-form .field-container {
+  width: 100%;
+}
+
+.field-container textarea {
+  width: 100%;
+  margin-top: 10px;
+}
+
+.feedback-form > .field-container > select {
+  width: 49.2%;
+}
+
+.feedback-form textarea {
+  height: 200px;
+}
+
+.feedback-form > .actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+input.anonymous {
+  display: block;
+  float: left;
+}
+
+input.template-title {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+select.field {
+  width: 100%;
+}

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+</head>
+<body>
+<div id="container">
+  <header id="app-bar" class="surface primary"><h6 class="center">Candid</h6></header>
+  <content>
+    <div class="feedback-tables">
+      <div class="surface base half">
+        <div class="table-header"><h6>Feedback Given</h6><button class="button secondary" onclick="location.reload();location.href='give-feedback.html'">Send</button></div>
+        <div class="table">
+          <div class="row">
+            <div class="col header">Date</div>
+            <div class="col header">To</div>
+            <div class="col header">Type</div>
+          </div>
+          <div class="row" onclick="location.reload();location.href='feedback-detail.html'">
+            <div class="col">Today, 11:48am</div>
+            <div class="col">Thomas McCoy</div>
+            <div class="col">Simple</div>
+          </div>
+          <div class="row" onclick="location.reload();location.href='feedback-detail.html'">
+            <div class="col">Yesterday, 6:21pm</div>
+            <div class="col">Tiffany Smith</div>
+            <div class="col">Simple</div>
+          </div>
+          <div class="row" onclick="location.reload();location.href='feedback-detail.html'">
+            <div class="col">March 1, 2018</div>
+            <div class="col">Jeffrey Vasquez</div>
+            <div class="col">Simple</div>
+          </div>
+        </div>
+      </div><div class="surface base half">
+        <div class="table-header"><h6>Feedback Received</h6><button class="button secondary" onclick="location.reload();location.href='request-feedback.html'">Request</button></div>
+        <div class="table">
+          <div class="row">
+            <div class="col header">Date</div>
+            <div class="col header">To</div>
+            <div class="col header">Type</div>
+          </div>
+          <div class="row unread" onclick="location.reload();location.href='feedback-detail.html'">
+            <div class="col">Today, 11:48am</div>
+            <div class="col">Thomas McCoy</div>
+            <div class="col">Simple</div>
+          </div>
+          <div class="row" onclick="location.reload();location.href='feedback-detail.html'">
+            <div class="col">Yesterday, 6:21pm</div>
+            <div class="col">Tiffany Smith</div>
+            <div class="col">Simple</div>
+          </div>
+          <div class="row" onclick="location.reload();location.href='feedback-detail.html'">
+            <div class="col">March 1, 2018</div>
+            <div class="col">Jeffrey Vasquez</div>
+            <div class="col">Simple</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </content>
+</div>
+</body>
+</html>

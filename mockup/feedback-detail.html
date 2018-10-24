@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+</head>
+<body>
+<div id="container">
+  <header id="app-bar" class="surface primary"><h6 class="center">Candid - Feedback Details</h6></header>
+  <content>
+    <div id="feedback">
+      <div class="feedback-detail surface base">
+          <div class="feedback-info">
+            <div class="group">
+              <div class="overline">From</div>
+              <div class="body1">Thomas McCoy</div>
+            </div>
+            <div class="group">
+              <div class="overline">Date</div>
+              <div class="body1">Today, 11:48am</div>
+            </div>
+          </div>
+          <div class="feedback-body">
+            <div class="body1">Sed placerat erat ut tortor luctus, ullamcorper congue sem ultrices. Nunc ac elit tellus. In non facilisis odio. Vestibulum molestie turpis sit amet nulla posuere, et cursus nunc posuere. Sed elementum varius nunc rutrum bibendum. Nunc vulputate eget leo eget vulputate. Integer feugiat tempor tellus, vitae malesuada augue accumsan vel.</div>
+          </div>
+          <div id="feedback-replies">
+            <div class="reply">
+              <span class="from overline">Jane Wheeler / Today, 1:55pm</span>
+              <span class="text body2">Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</span>
+            </div>
+            <div class="reply">
+              <span class="from overline">Thomas McCoy / Today, 5:01pm</span>
+              <span class="text body2">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</span>
+            </div>
+            <div id="reply-form">
+              <textarea class="body2"></textarea>
+              <div class="actions">
+                <button class="button secondary" onclick="collapse()">Cancel</button>
+                <button class="button secondary outline" onclick="submit()">Submit</button>&nbsp;
+              </div>&nbsp;
+            </div>
+          </div>
+          <div id="feedback-actions">
+            <button id="reply-button" class="button secondary outline" onclick="reply()">Reply</button>
+          </div>
+      </div>
+    </div>
+  </content>
+</div>
+
+<script>
+function reply() {
+  document.getElementById("reply-form").style.display = "block";
+  document.getElementById("feedback-actions").style.display = "none";
+}
+
+function collapse() {
+  document.getElementById("reply-form").style.display = "none";
+  document.getElementById("feedback-actions").style.display = "block";
+}
+
+function submit() {
+  collapse();
+}
+</script>
+</body>
+</html>

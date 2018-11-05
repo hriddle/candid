@@ -1,12 +1,10 @@
 package edu.depaul.cdm.se.candid.feedback;
 
-import edu.depaul.cdm.se.candid.feedback.repository.Feedback;
-import edu.depaul.cdm.se.candid.feedback.repository.FeedbackRepository;
-import edu.depaul.cdm.se.candid.feedback.repository.FeedbackRequest;
-import edu.depaul.cdm.se.candid.feedback.repository.FeedbackRequestRepository;
+import edu.depaul.cdm.se.candid.feedback.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -41,4 +39,23 @@ public class FeedbackService {
         return feedbackRequestRepository.findAllByRespondentId(respondentId);
     }
 
+    public Feedback getFeedbackById(String id) {
+        return feedbackRepository.findById(id).orElse(null);
+    }
+
+    public Feedback markAsRead(String id) {
+        Feedback feedback = getFeedbackById(id);
+        feedback.setReadByRecipient(true);
+        return feedbackRepository.save(feedback);
+    }
+
+    public Feedback addReplyToFeedback(String feedbackId, String userId, String text) {
+        Feedback feedback = getFeedbackById(feedbackId);
+        feedback.getReplies().add(Reply.builder()
+            .userId(userId)
+            .dateTime(LocalDateTime.now())
+            .text(text)
+            .build());
+        return feedbackRepository.save(feedback);
+    }
 }

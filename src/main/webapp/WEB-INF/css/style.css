@@ -9,6 +9,10 @@ body {
   color: white;
 }
 
+.icon-link {
+  color: rgba(255, 255, 255, .6);
+}
+
 /* TEXT STYLES */
 h1, h2, h3, h4, h5, h6 {
   /*RESET*/
@@ -127,6 +131,14 @@ h6 {
   color: #212121;
 }
 
+.overline.bigger {
+  font-size: 14px;
+}
+
+.bold {
+  font-weight: 500;
+}
+
 /* COMPONENTS */
 #app-bar {
   width: 100%;
@@ -134,8 +146,12 @@ h6 {
   padding: 15px;
 }
 
-#app-bar section.icon {
+#app-bar section.right-icon {
   float: right;
+}
+
+#app-bar section.left-icon {
+  float: left;
 }
 
 .surface.black {
@@ -198,8 +214,6 @@ select:focus, textarea:focus, input:focus {
   outline: none;
 }
 
-/* ICONS */
-
 /* DIV TABLES */
 .table {
   width: 100%;
@@ -217,8 +231,10 @@ select:focus, textarea:focus, input:focus {
   height: 49px;
 }
 
-.table > .row:hover {
+/* hover style for rows with the class 'row' but not the class 'header' */
+.table > .row:not(.header):hover {
   background-color: rgba(255, 255, 255, 0.08);
+  cursor: pointer;
 }
 
 .table-header {
@@ -289,7 +305,10 @@ select:focus, textarea:focus, input:focus {
   padding: 0 18px 18px 0;
 }
 
-.feedback-body {
+.feedback-question {
+}
+
+.feedback-answer {
   padding-bottom: 18px;
 }
 
@@ -312,7 +331,12 @@ select:focus, textarea:focus, input:focus {
   padding: 18px 0;
 }
 
-#feedback-replies > .reply > span {
+#feedback-replies > .reply > span.from {
+  display: inline-block;
+  padding-right: 5px;
+}
+
+#feedback-replies > .reply > span.text {
   display: block;
 }
 

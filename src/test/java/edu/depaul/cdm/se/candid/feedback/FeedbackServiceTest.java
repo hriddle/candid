@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.mockito.Mockito.mock;
@@ -28,7 +29,7 @@ public class FeedbackServiceTest {
         questions.get(0).setAnswer("You're the bee's knees!");
 
         Feedback feedback = Feedback.builder()
-            .dateWritten(LocalDate.now())
+            .dateWritten(LocalDateTime.now())
             .anonymous(false)
             .questions(questions)
             .build();

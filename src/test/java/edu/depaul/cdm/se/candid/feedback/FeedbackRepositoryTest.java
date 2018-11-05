@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -67,7 +68,7 @@ public class FeedbackRepositoryTest {
         .id("1")
         .senderId("jim")
         .recipientId("dwight")
-        .dateWritten(LocalDate.of(2018, 9, 1))
+        .dateWritten(LocalDateTime.of(2018, 9, 1, 0, 0, 0))
         .questions(Collections.singletonList(Question.builder().question("Comment Box").answer("Bears, beets, Battlestar Galactica.").build()))
         .build();
 
@@ -75,7 +76,7 @@ public class FeedbackRepositoryTest {
         .id("2")
         .senderId("jim")
         .recipientId("pam")
-        .dateWritten(LocalDate.of(2018, 9, 4))
+        .dateWritten(LocalDateTime.of(2018, 9, 4, 0, 0, 0))
         .questions(Collections.singletonList(Question.builder().question("Comment Box").answer("You are everything.").build()))
         .build();
 
@@ -83,7 +84,7 @@ public class FeedbackRepositoryTest {
         .id("3")
         .senderId("dwight")
         .recipientId("pam")
-        .dateWritten(LocalDate.of(2018, 9, 5))
+        .dateWritten(LocalDateTime.of(2018, 9, 5, 0, 0, 0))
         .questions(Collections.singletonList(Question.builder().question("Comment Box").answer("You are my friend.").build()))
         .build();
 
@@ -91,7 +92,7 @@ public class FeedbackRepositoryTest {
         .id("4")
         .senderId("dwight")
         .recipientId("angela")
-        .dateWritten(LocalDate.of(2018, 9, 7))
+        .dateWritten(LocalDateTime.of(2018, 9, 7, 0, 0, 0))
         .questions(Collections.singletonList(Question.builder().question("Comment Box").answer("I just want to be friends. Plus a little extra. Also, I love you.").build()))
         .build();
 

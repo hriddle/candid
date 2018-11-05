@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+</head>
+<body>
+<div id="container">
+  <div th:replace="fragments/header :: header"></div>
+  <content>
+    <div class="feedback-tables">
+      <div class="surface base half">
+        <div class="table-header"><h6>Feedback Given</h6><button class="button secondary" onclick="location.reload();location.href='give-feedback.html'">Send</button></div>
+        <div class="table">
+          <div class="row header">
+            <div class="col header">Date</div>
+            <div class="col header">To</div>
+            <div class="col header">Type</div>
+          </div>
+          <th:block th:each="feedback : ${given}">
+          <div class="row" th:onclick="'location.reload();window.location.href=\'feedback/' + ${feedback.id} + '\''">
+            <div class="col" th:text="${feedback.dateWritten}"></div>
+            <div class="col" th:text="${feedback.name}"></div>
+            <div class="col" th:text="${feedback.type}"></div>
+          </div>
+          </th:block>
+        </div>
+      </div><div class="surface base half">
+        <div class="table-header"><h6>Feedback Received</h6><button class="button secondary" onclick="location.reload();location.href='request-feedback.html'">Request</button></div>
+        <div class="table">
+          <div class="row header">
+            <div class="col header">Date</div>
+            <div class="col header">From</div>
+            <div class="col header">Type</div>
+          </div>
+          <th:block th:each="feedback : ${received}">
+            <div class="row" th:onclick="'location.reload();window.location.href=\'feedback/' + ${feedback.id} + '\''">
+              <div class="col" th:text="${feedback.dateWritten}"></div>
+              <div class="col" th:text="${feedback.name}"></div>
+              <div class="col" th:text="${feedback.type}"></div>
+            </div>
+          </th:block>
+        </div>
+      </div>
+    </div>
+  </content>
+</div>
+</body>
+</html>

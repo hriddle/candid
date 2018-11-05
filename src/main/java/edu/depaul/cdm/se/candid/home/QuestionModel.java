@@ -1,13 +1,11 @@
-package edu.depaul.cdm.se.candid.feedback.repository;
+package edu.depaul.cdm.se.candid.home;
 
 import lombok.Builder;
 import lombok.Data;
 
-import java.util.List;
-
 @Builder
 @Data
-public class Question {
+public class QuestionModel {
     private String question;
     private String answer;
 }

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+</head>
+<body>
+<div id="container">
+  <div th:replace="fragments/header :: header"></div>
+  <content>
+    <div id="feedback">
+      <div class="feedback-detail surface base">
+          <div class="feedback-info">
+            <div class="group">
+              <div class="overline">From</div>
+              <div class="body1" th:text="${feedback.senderName}"></div>
+            </div>
+            <div class="group">
+              <div class="overline">Date</div>
+              <div class="body1" th:text="${feedback.dateWritten}"></div>
+            </div>
+          </div>
+          <th:block th:each="question : ${feedback.questions}">
+              <div class="feedback-question">
+                  <div class="body1 secondary bold" th:text="${question.question}"></div>
+              </div>
+              <div class="feedback-answer">
+                  <div class="body1" th:text="${question.answer}"></div>
+              </div>
+          </th:block>
+          <div id="feedback-replies">
+            <th:block th:each="reply : ${feedback.replies}">
+              <div class="reply">
+                <span class="from overline bigger secondary" th:text="${reply.name}"></span><span class="from overline" th:text="'/ ' + ${reply.date}"></span>
+                <span class="text body2" th:text="${reply.text}"></span>
+              </div>
+            </th:block>
+            <form id="reply-form" action="#" th:action="'/feedback/' + ${feedback.id} + '/' + @{replies}" th:object="${replyModel}" method="post">
+              <textarea class="body2" th:field="*{text}"></textarea>
+              <div class="actions">
+                <button class="button secondary" onclick="collapse()">Cancel</button>
+                <button class="button secondary outline" th:type="submit">Submit</button>&nbsp;
+              </div>&nbsp;
+            </form>
+
+            <!--<form action="#" th:action="@{/greeting}" th:object="${greeting}" method="post">-->
+              <!--<p>Id: <input type="text" th:field="*{id}" /></p>-->
+              <!--<p>Message: <input type="text" th:field="*{content}" /></p>-->
+              <!--<p><input type="submit" value="Submit" /> <input type="reset" value="Reset" /></p>-->
+            <!--</form>-->
+          </div>
+          <div id="feedback-actions">
+            <button id="reply-button" class="button secondary outline" onclick="reply()">Reply</button>
+          </div>
+      </div>
+    </div>
+  </content>
+</div>
+
+<script>
+function reply() {
+  document.getElementById("reply-form").style.display = "block";
+  document.getElementById("feedback-actions").style.display = "none";
+}
+
+function collapse() {
+  document.getElementById("reply-form").style.display = "none";
+  document.getElementById("feedback-actions").style.display = "block";
+}
+
+function submit() {
+  collapse();
+}
+</script>
+</body>
+</html>

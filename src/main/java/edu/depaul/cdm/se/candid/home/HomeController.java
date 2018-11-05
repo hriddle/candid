@@ -35,7 +35,7 @@ public class HomeController {
     }
 
     @GetMapping("/")
-    String index(Model model) {
+    public String index(Model model) {
         AuthenticatedUser user = getAuthenticatedUser(loggedInUserId);
         if (user != null) {
             model.addAttribute("user", user);
@@ -58,6 +58,7 @@ public class HomeController {
                 ).collect(Collectors.toList());
             model.addAttribute("received", received);
             model.addAttribute("given", given);
+            model.addAttribute("showProfile", true);
             return UI.INDEX;
         }
         return UI.LOGIN;

@@ -6,7 +6,7 @@
 <body>
 <header th:fragment="header" id="app-bar" class="surface primary">
     <section class="left-icon"><a th:href="@{'/'}" class="icon-link"><i class="material-icons">home</i></a></section>
-    <section class="right-icon" th:if="${user != null}"><a th:href="@{'profile/' + ${user.id}}" class="icon-link"><i class="material-icons">account_circle</i></a></section>
+    <section class="right-icon" th:if="${user != null}"><i onclick="showProfile()" class="material-icons">account_circle</i></section>
     <h6 class="center">Candid</h6></header>
 </body>
 </html>

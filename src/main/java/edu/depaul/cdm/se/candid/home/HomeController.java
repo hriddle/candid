@@ -2,6 +2,8 @@ package edu.depaul.cdm.se.candid.home;
 
 import edu.depaul.cdm.se.candid.feedback.FeedbackService;
 import edu.depaul.cdm.se.candid.feedback.repository.Feedback;
+import edu.depaul.cdm.se.candid.feedback.repository.FeedbackTemplateRepository;
+import edu.depaul.cdm.se.candid.feedback.repository.Question;
 import edu.depaul.cdm.se.candid.user.AuthenticatedUser;
 import edu.depaul.cdm.se.candid.user.UserService;
 import edu.depaul.cdm.se.candid.user.repository.User;
@@ -17,7 +19,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Controller
@@ -25,13 +29,15 @@ public class HomeController {
 
     private final UserService userService;
     private final FeedbackService feedbackService;
+    private final FeedbackTemplateRepository feedbackTemplateRepository;
 
     private String loggedInUserId = "jim";
 
     @Autowired
-    public HomeController(UserService userService, FeedbackService feedbackService) {
+    public HomeController(UserService userService, FeedbackService feedbackService, FeedbackTemplateRepository feedbackTemplateRepository) {
         this.userService = userService;
         this.feedbackService = feedbackService;
+        this.feedbackTemplateRepository = feedbackTemplateRepository;
     }
 
     @GetMapping("/")
@@ -44,6 +50,7 @@ public class HomeController {
                     .dateWritten(formatFeedbackDate(feedback.getDateWritten()))
                     .name(getUserFullName(feedback.getSenderId()))
                     .type(feedback.getTemplateName() != null ? feedback.getTemplateName() : "Simple")
+                    .unread(!feedback.isReadByRecipient())
                     .build()
                 ).collect(Collectors.toList());
             List<FeedbackSummaryModel> given = feedbackService.findAllFeedbackGivenByUser(user.getId())
@@ -52,6 +59,7 @@ public class HomeController {
                     .dateWritten(formatFeedbackDate(feedback.getDateWritten()))
                     .name(getUserFullName(feedback.getRecipientId()))
                     .type(feedback.getTemplateName() != null ? feedback.getTemplateName() : "Simple")
+                    .unread(!feedback.isReadByRecipient())
                     .build()
                 ).collect(Collectors.toList());
 
@@ -67,6 +75,9 @@ public class HomeController {
     @GetMapping("feedback/{id}")
     public String getFeedbackDetail(@PathVariable String id, Model model) {
         Feedback feedback = feedbackService.getFeedbackById(id);
+        if (feedback.getRecipientId().equals(loggedInUserId)) {
+            feedbackService.markAsRead(id);
+        }
         model.addAttribute("feedback", toFeedbackDetailModel(feedback));
         model.addAttribute("replyModel", ReplyModel.builder().build());
         return UI.FEEDBACK;
@@ -100,6 +111,32 @@ public class HomeController {
         return redirectTo("/");
     }
 
+    @GetMapping("/give-feedback")
+    public String giveFeedback(Model model) {
+        Map<String, String> userMap = userService.findAll().stream().collect(Collectors.toMap(User::getId, user -> user.getProfile().getFullName()));
+        model.addAttribute("userMap", userMap);
+        model.addAttribute("feedback", new SendFeedbackModel());
+
+        return UI.SEND_FEEDBACK;
+    }
+
+    @PostMapping("/feedback")
+    public String sendFeedback(@ModelAttribute SendFeedbackModel sendFeedbackModel) {
+
+        feedbackService.giveFeedbackToUser(Feedback.builder()
+            .senderId(loggedInUserId)
+            .recipientId(sendFeedbackModel.getReceiverId())
+            .anonymous(sendFeedbackModel.isAnonymous())
+            .dateWritten(LocalDateTime.now())
+            .readByRecipient(false)
+            .templateName("Simple")
+            .question(Question.builder().question("Comments").answer(sendFeedbackModel.getFeedback()).build())
+            .replies(new ArrayList<>())
+            .build());
+
+        return redirectTo("/");
+    }
+
     private String redirectTo(String path) {
         return "redirect:" + path;
     }
@@ -122,7 +159,7 @@ public class HomeController {
         return FeedbackDetailModel.builder()
             .id(feedback.getId())
             .anonymous(feedback.isAnonymous())
-            .senderName(feedback.isAnonymous() ? "Anonymous" : getUserFullName(feedback.getSenderId()))
+            .senderName(getSenderName(feedback))
             .dateWritten(formatFeedbackDate(feedback.getDateWritten()))
             .questions(feedback.getQuestions().stream().map(q ->
                 QuestionModel.builder()
@@ -141,6 +178,14 @@ public class HomeController {
             .build();
     }
 
+    private String getSenderName(Feedback feedback) {
+        if (feedback.isAnonymous()) {
+            return feedback.getSenderId().equals(loggedInUserId) ? "You (Anonymous)" : "Anonymous";
+        } else {
+            return getUserFullName(feedback.getSenderId());
+        }
+    }
+
     private String formatFeedbackDate(LocalDateTime date) {
         if (date == null) return "";
         String monthAndDay = "MMMM d";
@@ -155,9 +200,9 @@ public class HomeController {
 
         String pattern = monthAndDay + year;
         if (isToday) {
-            pattern = "Today, " + date.getHour() + ":" + date.getMinute();
+            return "Today, " + date.getHour() + ":" + date.getMinute();
         } else if (isYesterday) {
-            pattern = "Yesterday, " + date.getHour() + ":" + date.getMinute();
+            return "Yesterday, " + date.getHour() + ":" + date.getMinute();
         } else if (isSameYear) {
             pattern = monthAndDay;
         }

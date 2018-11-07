@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+</head>
+<body>
+<div id="container">
+  <div th:replace="fragments/header :: header"></div>
+  <content>
+    <div id="feedback">
+      <div class="feedback-form surface base">
+        <form action="#" th:action="@{/feedback}" th:object="${feedback}" method="post">
+          <div class="field-container body2">
+            <select class="body2" th:field="*{receiverId}">
+              <option value="">Give to...</option>
+              <th:block th:each="user : ${userMap}">
+                <option th:text="${user.value}" th:value="${user.key}"></option>
+              </th:block>
+            </select>&nbsp;
+            <div class="body1 secondary">Feedback</div>
+            <textarea class="body2"></textarea>
+            <input type="checkbox" class="anonymous" th:field="*{anonymous}"/>Anonymous?
+          </div>
+          <div class="actions">
+            <button class="button secondary outline">Submit</button>
+            <div class="clear"></div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </content>
+</div>
+</body>
+</html>

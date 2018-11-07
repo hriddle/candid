@@ -21,7 +21,7 @@
             <div class="col header">Type</div>
           </div>
           <th:block th:each="feedback : ${given}">
-            <div class="row" th:onclick="'location.reload();window.location.href=\'feedback/' + ${feedback.id} + '\''">
+            <div class="row" th:onclick="'location.reload();window.location.href=\'feedback/' + ${feedback.id} + '\''" th:classappend="${feedback.unread} ? unread : read">
               <div class="col" th:text="${feedback.dateWritten}"></div>
               <div class="col" th:text="${feedback.name}"></div>
               <div class="col" th:text="${feedback.type}"></div>
@@ -41,7 +41,7 @@
             <div class="col header">Type</div>
           </div>
           <th:block th:each="feedback : ${received}">
-            <div class="row" th:onclick="'location.reload();window.location.href=\'feedback/' + ${feedback.id} + '\''">
+            <div class="row" th:onclick="'location.reload();window.location.href=\'feedback/' + ${feedback.id} + '\''" th:classappend="${feedback.unread} ? unread : read">
               <div class="col" th:text="${feedback.dateWritten}"></div>
               <div class="col" th:text="${feedback.name}"></div>
               <div class="col" th:text="${feedback.type}"></div>

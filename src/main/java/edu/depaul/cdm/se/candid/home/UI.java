@@ -5,4 +5,5 @@ public class UI {
     public static final String LOGIN = "login";
     public static final String FEEDBACK = "feedback";
     public static final String SEND_FEEDBACK = "send-feedback";
+    public static final String REQUEST_FEEDBACK = "request-feedback";
 }

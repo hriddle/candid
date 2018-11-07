@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+</head>
+<body>
+<div id="container">
+  <header id="app-bar" class="surface primary"><h6 class="center">Candid - Request Feedback</h6></header>
+  <content>
+    <div id="feedback">
+      <div class="feedback-form surface base">
+        <form action="#" th:action="@{/feedbackRequest}" th:object="${feedback}" method="post">
+          <div class="field-container">
+            <select class="body2" th:field="*{respondentId}">
+              <option value="">Request from...</option>
+              <th:block th:each="user : ${userMap}">
+                <option th:text="${user.value}" th:value="${user.key}"></option>
+              </th:block>
+            </select>&nbsp;
+            <div class="body1 secondary">Hello! I am requesting your feedback because...</div>
+            <textarea class="body2" th:value="*{message}"></textarea>
+          </div>
+          <div class="actions">
+            <button class="button secondary outline" th:type="submit">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </content>
+</div>
+</body>
+</html>

@@ -1,9 +1,7 @@
 package edu.depaul.cdm.se.candid.home;
 
 import edu.depaul.cdm.se.candid.feedback.FeedbackService;
-import edu.depaul.cdm.se.candid.feedback.repository.Feedback;
-import edu.depaul.cdm.se.candid.feedback.repository.FeedbackTemplateRepository;
-import edu.depaul.cdm.se.candid.feedback.repository.Question;
+import edu.depaul.cdm.se.candid.feedback.repository.*;
 import edu.depaul.cdm.se.candid.user.AuthenticatedUser;
 import edu.depaul.cdm.se.candid.user.UserService;
 import edu.depaul.cdm.se.candid.user.repository.User;
@@ -29,15 +27,15 @@ public class HomeController {
 
     private final UserService userService;
     private final FeedbackService feedbackService;
-    private final FeedbackTemplateRepository feedbackTemplateRepository;
+    private final FeedbackRequestRepository feedbackRequestRepository;
 
     private String loggedInUserId = "jim";
 
     @Autowired
-    public HomeController(UserService userService, FeedbackService feedbackService, FeedbackTemplateRepository feedbackTemplateRepository) {
+    public HomeController(UserService userService, FeedbackService feedbackService, FeedbackRequestRepository feedbackRequestRepository) {
         this.userService = userService;
         this.feedbackService = feedbackService;
-        this.feedbackTemplateRepository = feedbackTemplateRepository;
+        this.feedbackRequestRepository = feedbackRequestRepository;
     }
 
     @GetMapping("/")
@@ -120,6 +118,15 @@ public class HomeController {
         return UI.SEND_FEEDBACK;
     }
 
+    @GetMapping("/request-feedback")
+    public String requestFeedback(Model model) {
+        Map<String, String> userMap = userService.findAll().stream().collect(Collectors.toMap(User::getId, user -> user.getProfile().getFullName()));
+        model.addAttribute("userMap", userMap);
+        model.addAttribute("feedback", FeedbackRequest.builder().initiatorId(loggedInUserId).build());
+
+        return UI.REQUEST_FEEDBACK;
+    }
+
     @PostMapping("/feedback")
     public String sendFeedback(@ModelAttribute SendFeedbackModel sendFeedbackModel) {
 
@@ -134,6 +141,13 @@ public class HomeController {
             .replies(new ArrayList<>())
             .build());
 
+        return redirectTo("/");
+    }
+
+    @PostMapping("/feedbackRequest")
+    public String feedbackRequest(@ModelAttribute FeedbackRequest feedbackRequest) {
+        feedbackRequest.setInitiatorId(loggedInUserId);
+        feedbackRequestRepository.save(feedbackRequest);
         return redirectTo("/");
     }
 

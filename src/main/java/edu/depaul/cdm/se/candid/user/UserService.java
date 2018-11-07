@@ -58,6 +58,22 @@ public class UserService {
         }
     }
 
+    public void changeBirthday(String id, String newBirthday) {
+        User user = getUser(id);
+        if (user != null) {
+            user.getProfile().setBirthday(newBirthday);
+            userRepository.save(user);
+        }
+    }
+
+    public void changeLocation(String id, String newLocation) {
+        User user = getUser(id);
+        if (user != null) {
+            user.getProfile().setLocation(newLocation);
+            userRepository.save(user);
+        }
+    }
+
     public User getUser(String id) {
         return userRepository.findById(id).orElse(null);
     }

@@ -1,11 +1,11 @@
 package edu.depaul.cdm.se.candid.user.repository;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.Getter;
+import lombok.*;
 
 @Builder(toBuilder = true)
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserProfile {
     private String firstName;
     private String lastName;

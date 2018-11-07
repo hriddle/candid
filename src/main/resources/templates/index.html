@@ -3,6 +3,7 @@
 <head>
   <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link href="https://fonts.googleapis.com/css?family=Merriweather:300i,400i,700i|Roboto:300,300i,400,500,700" rel="stylesheet">
 </head>
 <body>
 <div id="container">
@@ -50,41 +51,8 @@
       </div>
     </div>
   </content>
-  <section id="profile-overlay" class="hide" onclick="closeProfile()">
-    <section id="profile" class="surface base">
-      <header>
-        <h6 th:text="'About ' + ${user.userProfile.getFullName()}"></h6>
-        <button class="button outline secondary" onclick="">Edit</button>
-      </header>
-      <section id="profile-section">
-        <div class="flex-vertical-align">
-          <div id="profile-image" class="square84"><img th:src="${user.userProfile.avatarLocation}"></div>
-          <section id="profile-info">
-            <span class="icon-text flex-vertical-align"><i class="material-icons">cake</i><span class="body1"
-                                                                                                th:text="${user.userProfile.birthday}"></span></span>
-            <span class="icon-text flex-vertical-align"><i class="material-icons">location_city</i><span class="body1"
-                                                                                                         th:text="${user.userProfile.location}"></span></span>
-          </section>
-        </div>
-        <section id="profile-bio">
-          <span class="body2" th:text="${user.userProfile.aboutMe}"></span>
-        </section>
-      </section>
-    </section>
-  </section>
+  <div th:replace="fragments/profile"></div>
 </div>
-
-<script>
-
-    function showProfile() {
-        document.getElementById("profile-overlay").classList.remove("hide");
-    }
-
-    function closeProfile() {
-        document.getElementById("profile-overlay").classList.add("hide");
-    }
-
-</script>
 
 </body>
 </html>

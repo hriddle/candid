@@ -1,0 +1,81 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<section th:fragment="show-profile" id="profile-overlay" class="hide">
+  <section id="profile" class="surface base">
+    <form action="#" th:action="'/users/' + ${user.id} + '/' + @{profile}" th:object="${updatedProfile}" method="post">
+      <header>
+        <h6 th:text="'About ' + ${user.userProfile.getFullName()}"></h6>
+        <button id="edit-profile-button" class="button outline secondary" onclick="beginEdit()">Edit</button>
+        <button id="save-profile-button" class="button outline secondary hide" disabled th:type="submit">Save</button>
+      </header>
+      <section id="profile-section">
+        <div class="flex-vertical-align">
+          <div id="profile-image" class="square84"><img th:src="${user.userProfile.avatarLocation}"></div>
+          <section id="profile-info">
+          <span class="icon-text flex-vertical-align">
+            <i class="material-icons">cake</i>
+            <span class="body1" th:text="${user.userProfile.birthday}"></span>
+          </span>
+            <span class="icon-text flex-vertical-align">
+            <i class="material-icons">location_city</i>
+            <span class="body1" th:text="${user.userProfile.location}"></span>
+          </span>
+          </section>
+        </div>
+        <section id="profile-bio">
+          <span class="body2" th:text="${user.userProfile.aboutMe}"></span>
+        </section>
+      </section>
+      <section id="profile-edit" class="hide">
+        <div class="flex-vertical-align">
+          <div id="profile-image-edit" class="square84">
+            <img th:src="${user.userProfile.avatarLocation}">
+          </div>
+          <section id="profile-info-edit">
+                <span class="icon-field flex-vertical-align">
+                    <i class="material-icons">cake</i>
+                    <input class="birthday body2" type="text" th:field="*{birthday}"/>
+                </span>
+            <span class="icon-field flex-vertical-align">
+                    <i class="material-icons">location_city</i>
+                    <input class="location body2" type="text" th:field="*{location}"/>
+                </span>
+          </section>
+        </div>
+        <section id="profile-bio-edit">
+          <textarea id="edit-about-me" class="body2" th:field="*{aboutMe}"></textarea>
+        </section>
+      </section>
+    </form>
+  </section>
+</section>
+<script>
+
+    function showProfile() {
+        document.getElementById("profile-overlay").classList.remove("hide");
+    }
+
+    function closeProfile() {
+        document.getElementById("profile-overlay").classList.add("hide");
+    }
+
+    function beginEdit() {
+        document.getElementById("profile-section").classList.add("hide");
+        document.getElementById("profile-edit").classList.remove("hide");
+
+        document.getElementById("edit-profile-button").classList.add("hide");
+        document.getElementById("save-profile-button").classList.remove("hide");
+        document.getElementById("edit-profile-button").disabled = true;
+        document.getElementById("save-profile-button").disabled = false;
+    }
+
+    function endEdit() {
+        document.getElementById("profile-section").classList.remove("hide");
+        document.getElementById("profile-edit").classList.add("hide");
+
+        document.getElementById("edit-profile-button").classList.remove("hide");
+        document.getElementById("save-profile-button").classList.add("hide");
+        document.getElementById("edit-profile-button").disabled = false;
+        document.getElementById("save-profile-button").disabled = true;
+    }
+</script>

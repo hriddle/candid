@@ -38,8 +38,6 @@ public class HomeController {
     public String index(Model model) {
         AuthenticatedUser user = getAuthenticatedUser(loggedInUserId);
         if (user != null) {
-            model.addAttribute("user", user);
-
             List<FeedbackSummaryModel> received = feedbackService.findAllFeedbackGivenToUser(user.getId())
                 .stream().map(feedback -> FeedbackSummaryModel.builder()
                     .id(feedback.getId())
@@ -56,9 +54,11 @@ public class HomeController {
                     .type(feedback.getTemplateName() != null ? feedback.getTemplateName() : "Simple")
                     .build()
                 ).collect(Collectors.toList());
+
+            model.addAttribute("user", user);
             model.addAttribute("received", received);
             model.addAttribute("given", given);
-            model.addAttribute("showProfile", true);
+            model.addAttribute("updatedProfile", user.getUserProfile());
             return UI.INDEX;
         }
         return UI.LOGIN;
@@ -73,9 +73,35 @@ public class HomeController {
     }
 
     @PostMapping("feedback/{feedbackId}/replies")
-    public String replyToFeedback(@PathVariable String feedbackId, @ModelAttribute ReplyModel replyModel, Model model) {
+    public String replyToFeedback(@PathVariable String feedbackId, @ModelAttribute ReplyModel replyModel) {
         feedbackService.addReplyToFeedback(feedbackId, loggedInUserId, replyModel.getText());
-        return "redirect:/feedback/" + feedbackId; //getFeedbackDetail(feedbackId, model);
+        return redirectTo("/feedback/" + feedbackId); //getFeedbackDetail(feedbackId, model);
+    }
+
+    @PostMapping("users/{userId}/profile")
+    public String updateUserProfile(@PathVariable String userId, @ModelAttribute UserProfile updatedProfile) {
+        User user = userService.getUser(userId);
+        if (updatedProfile.getAvatarLocation() != null &&
+            !user.getProfile().getAvatarLocation().equals(updatedProfile.getAvatarLocation())) {
+            userService.changeAvatar(userId, updatedProfile.getAvatarLocation());
+        }
+        if (updatedProfile.getBirthday() != null &&
+            !user.getProfile().getBirthday().equals(updatedProfile.getBirthday())) {
+            userService.changeBirthday(userId, updatedProfile.getBirthday());
+        }
+        if (updatedProfile.getLocation() != null &&
+            !user.getProfile().getLocation().equals(updatedProfile.getLocation())) {
+            userService.changeLocation(userId, updatedProfile.getLocation());
+        }
+        if (updatedProfile.getAboutMe() != null &&
+            !user.getProfile().getAboutMe().equals(updatedProfile.getAboutMe())) {
+            userService.changeAboutMe(userId, updatedProfile.getAboutMe());
+        }
+        return redirectTo("/");
+    }
+
+    private String redirectTo(String path) {
+        return "redirect:" + path;
     }
 
     private AuthenticatedUser getAuthenticatedUser(String id) {

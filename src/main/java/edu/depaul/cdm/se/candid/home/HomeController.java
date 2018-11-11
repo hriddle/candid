@@ -111,7 +111,9 @@ public class HomeController {
 
     @GetMapping("/give-feedback")
     public String giveFeedback(Model model) {
-        Map<String, String> userMap = userService.findAll().stream().collect(Collectors.toMap(User::getId, user -> user.getProfile().getFullName()));
+        Map<String, String> userMap = userService.findAll().stream()
+            .filter(user -> !user.getId().equals(loggedInUserId))
+            .collect(Collectors.toMap(User::getId, user -> user.getProfile().getFullName()));
         model.addAttribute("userMap", userMap);
         model.addAttribute("feedback", new SendFeedbackModel());
 
@@ -120,7 +122,9 @@ public class HomeController {
 
     @GetMapping("/request-feedback")
     public String requestFeedback(Model model) {
-        Map<String, String> userMap = userService.findAll().stream().collect(Collectors.toMap(User::getId, user -> user.getProfile().getFullName()));
+        Map<String, String> userMap = userService.findAll().stream()
+            .filter(user -> !user.getId().equals(loggedInUserId))
+            .collect(Collectors.toMap(User::getId, user -> user.getProfile().getFullName()));
         model.addAttribute("userMap", userMap);
         model.addAttribute("feedback", FeedbackRequest.builder().initiatorId(loggedInUserId).build());
 

@@ -376,3 +376,7 @@ input.template-title {
 select.field {
   width: 100%;
 }
+
+#feedback select {
+  width: 287px;
+}

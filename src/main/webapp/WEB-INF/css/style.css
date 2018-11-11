@@ -195,7 +195,7 @@ button:focus {
 textarea, input {
   outline: none;
   border: none;
-  padding: 5px;
+  padding: 14px;
   color: white;
 }
 
@@ -402,6 +402,10 @@ select.field {
   width: 100%;
 }
 
+#feedback select {
+  width: 287px;
+}
+
 /* PROFILE */
 #profile-overlay {
   position: fixed;
@@ -429,10 +433,18 @@ select.field {
   position: relative;
 }
 
-#profile header > button {
+#edit-profile-button, #save-profile-button {
   position: absolute;
   top: 0;
   right: 0;
+  width: 100px;
+}
+
+#cancel-edit-profile-button {
+  position: absolute;
+  top: 0;
+  right: 100px;
+  width: 100px;
 }
 
 #profile-section, #profile-edit {
@@ -464,19 +476,19 @@ select.field {
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
-  height: 84px;
 }
 
 #profile-info > span.icon-text {
   height: 28px;
 }
 
-#profile-info-edit .icon-field {
-  display: inline-block;
-}
-
 #profile-info > span.icon-text > i, #profile-info-edit > span.icon-field > i {
   padding: 0 14px;
+}
+
+#profile-info-edit > span.icon-field > input {
+  padding: 0 14px;
+  box-sizing: border-box;
 }
 
 #profile-bio, #profile-bio-edit {
@@ -507,6 +519,6 @@ select.field {
   display: none!important;
 }
 
-i:hover {
+i.clickable:hover {
   cursor: pointer;
 }

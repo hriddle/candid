@@ -1,10 +1,11 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
-<section th:fragment="show-profile" id="profile-overlay" class="hide">
+<section th:fragment="show-profile" id="profile-overlay" class="hide" onclick="closeProfile()">
   <section id="profile" class="surface base">
     <form action="#" th:action="'/users/' + ${user.id} + '/' + @{profile}" th:object="${updatedProfile}" method="post">
       <header>
         <h6 th:text="'About ' + ${user.userProfile.getFullName()}"></h6>
+        <button id="cancel-edit-profile-button" class="button secondary hide" disabled onclick="endEdit()">Cancel</button>
         <button id="edit-profile-button" class="button outline secondary" onclick="beginEdit()">Edit</button>
         <button id="save-profile-button" class="button outline secondary hide" disabled th:type="submit">Save</button>
       </header>
@@ -50,23 +51,35 @@
   </section>
 </section>
 <script>
+    var currentlyEditing = false;
 
     function showProfile() {
         document.getElementById("profile-overlay").classList.remove("hide");
     }
 
     function closeProfile() {
-        document.getElementById("profile-overlay").classList.add("hide");
+        var modal = document.getElementById('profile-overlay');
+
+        if (event.target === modal) {
+            modal.classList.add("hide");
+
+            if (currentlyEditing) {
+                endEdit();
+            }
+        }
     }
 
     function beginEdit() {
+        currentlyEditing = true;
         document.getElementById("profile-section").classList.add("hide");
         document.getElementById("profile-edit").classList.remove("hide");
 
         document.getElementById("edit-profile-button").classList.add("hide");
         document.getElementById("save-profile-button").classList.remove("hide");
+        document.getElementById("cancel-edit-profile-button").classList.remove("hide");
         document.getElementById("edit-profile-button").disabled = true;
         document.getElementById("save-profile-button").disabled = false;
+        document.getElementById("cancel-edit-profile-button").disabled = false;
     }
 
     function endEdit() {
@@ -75,7 +88,9 @@
 
         document.getElementById("edit-profile-button").classList.remove("hide");
         document.getElementById("save-profile-button").classList.add("hide");
+        document.getElementById("cancel-edit-profile-button").classList.add("hide");
         document.getElementById("edit-profile-button").disabled = false;
         document.getElementById("save-profile-button").disabled = true;
+        document.getElementById("cancel-edit-profile-button").disabled = true;
     }
 </script>

@@ -1,10 +1,22 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Candid - Login</title>
-</head>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: head"></head>
 <body>
-    Login Coming Soon
+<div id="container">
+  <div th:replace="fragments/header :: header"></div>
+  <div id="login">
+    <div class="login-form surface base">
+      <form action="#" th:action="@{/login}" method="post">
+        <div class="field-container">
+          <input type="text" name="username" id="username" class="body2" th:placeholder="username"/>
+          <input type="password" name="password" id="password" class="body2" th:placeholder="password"/>
+        </div>
+        <div class="actions">
+          <button class="button secondary outline" th:type="submit">Log In</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 </body>
 </html>

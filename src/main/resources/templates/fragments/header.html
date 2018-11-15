@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head th:fragment="head">
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
@@ -9,8 +9,13 @@
 <body>
 <header th:fragment="header" id="app-bar" class="surface primary">
     <section class="left-icon"><a th:href="@{'/'}" class="icon-link"><i class="material-icons clickable">home</i></a></section>
-    <section class="right-icon" th:if="${user != null}"><a th:href="@{'/feedback-requests'}" class="icon-link"><i class="material-icons clickable">question_answer</i></a><i onclick="showProfile()" class="material-icons clickable">account_circle</i></section>
+  <section class="right-icon"><span sec:authorize="isAuthenticated()"><a th:href="@{'/feedback-requests'}" class="icon-link"><i class="material-icons clickable">question_answer</i></a><i onclick="showProfile()" class="material-icons clickable">account_circle</i></span></section>
     <h6 class="center">Candid</h6>
+    <div id="logout" sec:authorize="isAuthenticated()">
+      <form th:action="@{/logout}" method="post">
+        <button class="button secondary outline" th:type="submit">Sign Out</button>
+      </form>
+    </div>
 </header>
 </body>
 </html>

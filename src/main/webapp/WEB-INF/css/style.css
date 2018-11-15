@@ -533,3 +533,37 @@ select.field {
 i.clickable:hover {
   cursor: pointer;
 }
+
+/** LOGIN LOGOUT **/
+
+#login {
+  width: 100%;
+  padding: 24px;
+}
+
+#login > .login-form {
+  width: 650px;
+  margin: 0 auto;
+  padding: 18px 31px;
+}
+
+.login-form .field-container {
+  width: 100%;
+}
+
+.login-form .field-container input {
+  display: block;
+  margin: 10px auto;
+  width: 200px;
+}
+
+.login-form .actions {
+  width: 200px;
+  margin: 10px auto;
+}
+
+#logout {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+}

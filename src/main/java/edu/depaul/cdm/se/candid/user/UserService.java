@@ -78,6 +78,10 @@ public class UserService {
         return userRepository.findById(id).orElse(null);
     }
 
+    public User findByEmail(String email) {
+        return userRepository.findByCredentials_Email(email);
+    }
+
     public List<User> findAll() {
         return userRepository.findAll();
     }

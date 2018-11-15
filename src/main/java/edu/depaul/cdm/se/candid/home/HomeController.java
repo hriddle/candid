@@ -7,9 +7,14 @@ import edu.depaul.cdm.se.candid.feedback.repository.FeedbackRequestRepository;
 import edu.depaul.cdm.se.candid.feedback.repository.Question;
 import edu.depaul.cdm.se.candid.user.AuthenticatedUser;
 import edu.depaul.cdm.se.candid.user.UserService;
+import edu.depaul.cdm.se.candid.user.login.InvalidCredentialsException;
+import edu.depaul.cdm.se.candid.user.login.LoginAttempt;
+import edu.depaul.cdm.se.candid.user.login.LoginService;
 import edu.depaul.cdm.se.candid.user.repository.User;
 import edu.depaul.cdm.se.candid.user.repository.UserProfile;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,18 +37,33 @@ public class HomeController {
     private final FeedbackService feedbackService;
     private final FeedbackRequestRepository feedbackRequestRepository;
 
-    private String loggedInUserId = "jim";
-
     @Autowired
-    public HomeController(UserService userService, FeedbackService feedbackService, FeedbackRequestRepository feedbackRequestRepository) {
+    public HomeController(LoginService loginService, UserService userService, FeedbackService feedbackService, FeedbackRequestRepository feedbackRequestRepository) {
         this.userService = userService;
         this.feedbackService = feedbackService;
         this.feedbackRequestRepository = feedbackRequestRepository;
     }
 
+//    @PostMapping("/login")
+//    public String login(@ModelAttribute LoginAttempt loginAttempt, Model model) {
+//        try {
+//            loginService.login(loginAttempt);
+//        } catch (InvalidCredentialsException e) {
+//            model.addAttribute("loginError", "Invalid Credentials");
+//            model.addAttribute("loginAttempt", loginAttempt);
+//            return UI.LOGIN;
+//        }
+//        return redirectTo("/");
+//    }
+
+    @GetMapping("/login")
+    public String login() {
+        return UI.LOGIN;
+    }
+
     @GetMapping("/")
     public String index(Model model) {
-        AuthenticatedUser user = getAuthenticatedUser(loggedInUserId);
+        AuthenticatedUser user = getAuthenticatedUser();
         if (user != null) {
             List<FeedbackSummaryModel> received = feedbackService.findAllFeedbackGivenToUser(user.getId())
                 .stream().map(feedback -> FeedbackSummaryModel.builder()
@@ -70,13 +90,14 @@ public class HomeController {
             model.addAttribute("updatedProfile", user.getUserProfile());
             return UI.INDEX;
         }
+        model.addAttribute("loginAttempt", new LoginAttempt());
         return UI.LOGIN;
     }
 
     @GetMapping("feedback/{id}")
     public String getFeedbackDetail(@PathVariable String id, Model model) {
         Feedback feedback = feedbackService.getFeedbackById(id);
-        if (feedback.getRecipientId().equals(loggedInUserId)) {
+        if (feedback.getRecipientId().equals(getLoggedInUserId())) {
             feedbackService.markAsRead(id);
         }
         model.addAttribute("feedback", toFeedbackDetailModel(feedback));
@@ -86,7 +107,7 @@ public class HomeController {
 
     @PostMapping("feedback/{feedbackId}/replies")
     public String replyToFeedback(@PathVariable String feedbackId, @ModelAttribute ReplyModel replyModel) {
-        feedbackService.addReplyToFeedback(feedbackId, loggedInUserId, replyModel.getText());
+        feedbackService.addReplyToFeedback(feedbackId, getLoggedInUserId(), replyModel.getText());
         return redirectTo("/feedback/" + feedbackId); //getFeedbackDetail(feedbackId, model);
     }
 
@@ -115,7 +136,7 @@ public class HomeController {
     @GetMapping("/give-feedback")
     public String giveFeedback(Model model) {
         Map<String, String> userMap = userService.findAll().stream()
-            .filter(user -> !user.getId().equals(loggedInUserId))
+            .filter(user -> !user.getId().equals(getLoggedInUserId()))
             .collect(Collectors.toMap(User::getId, user -> user.getProfile().getFullName()));
         model.addAttribute("userMap", userMap);
         model.addAttribute("feedback", new SendFeedbackModel());
@@ -126,7 +147,7 @@ public class HomeController {
     @GetMapping("/request-feedback")
     public String requestFeedback(Model model) {
         Map<String, String> userMap = userService.findAll().stream()
-            .filter(user -> !user.getId().equals(loggedInUserId))
+            .filter(user -> !user.getId().equals(getLoggedInUserId()))
             .collect(Collectors.toMap(User::getId, user -> user.getProfile().getFullName()));
         model.addAttribute("userMap", userMap);
         model.addAttribute("feedback", new FeedbackRequest());
@@ -137,19 +158,19 @@ public class HomeController {
     @GetMapping("/feedback-requests")
     public String getFeedbackRequests(Model model) {
         Map<String, String> userMap = userService.findAll().stream()
-            .filter(user -> !user.getId().equals(loggedInUserId))
+            .filter(user -> !user.getId().equals(getLoggedInUserId()))
             .collect(Collectors.toMap(User::getId, user -> user.getProfile().getFullName()));
 
-        List<FeedbackRequestModel> feedbackRequests = feedbackRequestRepository.findAllByRespondentId(loggedInUserId).stream()
+        List<FeedbackRequestModel> feedbackRequests = feedbackRequestRepository.findAllByRespondentId(getLoggedInUserId()).stream()
             .map(f -> FeedbackRequestModel.builder()
-                    .id(f.getId())
-                    .name(userMap.get(f.getInitiatorId()))
-                    .requestDate(formatFeedbackDate(f.getRequestDate()))
-                    .message(f.getMessage())
-                    .incomplete(!f.isCompleted())
-                    .build()
+                .id(f.getId())
+                .name(userMap.get(f.getInitiatorId()))
+                .requestDate(formatFeedbackDate(f.getRequestDate()))
+                .message(f.getMessage())
+                .incomplete(!f.isCompleted())
+                .build()
             ).collect(Collectors.toList());
-        List<FeedbackRequestModel> requestedFeedback = feedbackRequestRepository.findAllByInitiatorId(loggedInUserId).stream()
+        List<FeedbackRequestModel> requestedFeedback = feedbackRequestRepository.findAllByInitiatorId(getLoggedInUserId()).stream()
             .map(f -> FeedbackRequestModel.builder()
                 .id(f.getId())
                 .name(userMap.get(f.getRespondentId()))
@@ -159,7 +180,7 @@ public class HomeController {
                 .build()
             ).collect(Collectors.toList());
 
-        AuthenticatedUser user = getAuthenticatedUser(loggedInUserId);
+        AuthenticatedUser user = getAuthenticatedUser();
         model.addAttribute("user", user);
         model.addAttribute("updatedProfile", user.getUserProfile());
         model.addAttribute("feedbackRequests", feedbackRequests);
@@ -171,7 +192,7 @@ public class HomeController {
     public String sendFeedback(@ModelAttribute("feedback") SendFeedbackModel sendFeedbackModel) {
 
         feedbackService.giveFeedbackToUser(Feedback.builder()
-            .senderId(loggedInUserId)
+            .senderId(getLoggedInUserId())
             .recipientId(sendFeedbackModel.getReceiverId())
             .anonymous(sendFeedbackModel.isAnonymous())
             .dateWritten(LocalDateTime.now())
@@ -186,7 +207,7 @@ public class HomeController {
 
     @PostMapping("/feedbackRequest")
     public String feedbackRequest(@ModelAttribute("feedback") FeedbackRequest feedbackRequest) {
-        feedbackRequest.setInitiatorId(loggedInUserId);
+        feedbackRequest.setInitiatorId(getLoggedInUserId());
         feedbackRequest.setRequestDate(LocalDateTime.now());
         feedbackRequest.setCompleted(false);
         feedbackRequestRepository.save(feedbackRequest);
@@ -197,8 +218,18 @@ public class HomeController {
         return "redirect:" + path;
     }
 
-    private AuthenticatedUser getAuthenticatedUser(String id) {
-        User user = userService.getUser(id);
+    private String getLoggedInUserId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.isAuthenticated()) {
+            org.springframework.security.core.userdetails.User userPrincipal = (org.springframework.security.core.userdetails.User)
+                SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            return userPrincipal.getUsername();
+        }
+        return null;
+    }
+
+    private AuthenticatedUser getAuthenticatedUser() {
+        User user = userService.getUser(getLoggedInUserId());
         if (user != null) {
             return AuthenticatedUser.builder()
                 .id(user.getId())
@@ -226,7 +257,7 @@ public class HomeController {
             .replies(feedback.getReplies().stream().map(r ->
                 ReplyModel.builder()
                     .senderId(r.getUserId())
-                    .name(r.getUserId().equals(loggedInUserId) ? "You" : getUserFullName(r.getUserId()))
+                    .name(r.getUserId().equals(getLoggedInUserId()) ? "You" : getUserFullName(r.getUserId()))
                     .date(formatReplyDate(r.getDateTime()))
                     .text(r.getText())
                     .build()
@@ -236,7 +267,7 @@ public class HomeController {
 
     private String getSenderName(Feedback feedback) {
         if (feedback.isAnonymous()) {
-            return feedback.getSenderId().equals(loggedInUserId) ? "You (Anonymous)" : "Anonymous";
+            return feedback.getSenderId().equals(getLoggedInUserId()) ? "You (Anonymous)" : "Anonymous";
         } else {
             return getUserFullName(feedback.getSenderId());
         }

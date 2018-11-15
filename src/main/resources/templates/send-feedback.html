@@ -1,9 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-  <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-</head>
+<head th:replace="fragments/header :: head"></head>
 <body>
 <div id="container">
   <div th:replace="fragments/header :: header"></div>
@@ -19,12 +16,11 @@
               </th:block>
             </select>&nbsp;
             <div class="body1 secondary">Feedback</div>
-            <textarea class="body2"></textarea>
+            <textarea class="body2" th:field="*{feedback}"></textarea>
             <input type="checkbox" class="anonymous" th:field="*{anonymous}"/>Anonymous?
           </div>
           <div class="actions">
             <button class="button secondary outline">Submit</button>
-            <div class="clear"></div>
           </div>
         </form>
       </div>

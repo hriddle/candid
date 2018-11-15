@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: head"></head>
+<body>
+<div id="container">
+  <div th:replace="fragments/header :: header"></div>
+  <content>
+    <div class="feedback-tables">
+      <div class="surface base half">
+        <div class="table-header"><h6>Requests for Your Feedback</h6></div>
+        <div class="table">
+          <div class="row header">
+            <div class="col header">Date</div>
+            <div class="col header">Requested By</div>
+            <div class="col header">Message</div>
+          </div>
+          <th:block th:each="feedbackRequest : ${feedbackRequests}">
+            <div class="row" th:classappend="${feedbackRequest.incomplete} ? unread : read">
+              <div class="col" th:text="${feedbackRequest.requestDate}"></div>
+              <div class="col" th:text="${feedbackRequest.name}"></div>
+              <div class="col" th:text="${feedbackRequest.message}"></div>
+            </div>
+          </th:block>
+        </div>
+      </div>
+      <div class="surface base half">
+        <div class="table-header"><h6>Your Requests for Feedback</h6></div>
+        <div class="table">
+          <div class="row header">
+            <div class="col header">Date</div>
+            <div class="col header">Requested From</div>
+            <div class="col header">Message</div>
+          </div>
+          <th:block th:each="feedbackRequest : ${requestedFeedback}">
+            <div class="row" th:classappend="${feedbackRequest.incomplete} ? unread : read">
+              <div class="col" th:text="${feedbackRequest.requestDate}"></div>
+              <div class="col" th:text="${feedbackRequest.name}"></div>
+              <div class="col" th:text="${feedbackRequest.message}"></div>
+            </div>
+          </th:block>
+        </div>
+      </div>
+    </div>
+  </content>
+  <div th:replace="fragments/profile"></div>
+</div>
+
+</body>
+</html>

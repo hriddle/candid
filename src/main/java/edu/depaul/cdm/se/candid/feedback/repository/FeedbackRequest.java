@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 
+import java.time.LocalDateTime;
+
 @Builder
 @Data
 @NoArgsConstructor
@@ -15,6 +17,8 @@ public class FeedbackRequest {
     private String id;
     private String initiatorId;
     private String respondentId;
+    private LocalDateTime requestDate;
     private String message;
     private FeedbackTemplate template;
+    private boolean completed;
 }

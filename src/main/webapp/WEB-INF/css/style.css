@@ -147,12 +147,23 @@ h6 {
   padding: 15px;
 }
 
+#app-bar section.left-icon, #app-bar section.right-icon {
+  display: block;
+  width: 100px;
+}
+
 #app-bar section.right-icon {
   float: right;
+  display: flex;
+  justify-content: flex-end;
 }
 
 #app-bar section.left-icon {
   float: left;
+}
+
+#app-bar i {
+  padding: 0 8px;
 }
 
 .surface.black {

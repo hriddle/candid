@@ -1,12 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-  <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-</head>
+<head th:replace="fragments/header :: head"></head>
 <body>
 <div id="container">
-  <header id="app-bar" class="surface primary"><h6 class="center">Candid - Request Feedback</h6></header>
+  <div th:replace="fragments/header :: header"></div>
   <content>
     <div id="feedback">
       <div class="feedback-form surface base">
@@ -19,10 +16,10 @@
               </th:block>
             </select>&nbsp;
             <div class="body1 secondary">Hello! I am requesting your feedback because...</div>
-            <textarea class="body2" th:value="*{message}"></textarea>
+            <textarea class="body2" th:field="*{message}"></textarea>
           </div>
           <div class="actions">
-            <button class="button secondary outline" th:type="submit">Submit</button>
+            <button class="button secondary outline">Submit</button>
           </div>
         </form>
       </div>

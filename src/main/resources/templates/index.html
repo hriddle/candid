@@ -1,10 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-  <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-  <link href="https://fonts.googleapis.com/css?family=Merriweather:300i,400i,700i|Roboto:300,300i,400,500,700" rel="stylesheet">
-</head>
+<head th:replace="fragments/header :: head"></head>
 <body>
 <div id="container">
   <div th:replace="fragments/header :: header"></div>
@@ -12,7 +8,7 @@
     <div class="feedback-tables">
       <div class="surface base half">
         <div class="table-header"><h6>Feedback Given</h6>
-          <button class="button secondary" onclick="location.reload();location.href='give-feedback.html'">Send</button>
+          <button class="button secondary outline" onclick="location.reload();location.href='give-feedback.html'">Send</button>
         </div>
         <div class="table">
           <div class="row header">
@@ -31,7 +27,7 @@
       </div>
       <div class="surface base half">
         <div class="table-header"><h6>Feedback Received</h6>
-          <button class="button secondary" onclick="location.reload();location.href='request-feedback.html'">Request
+          <button class="button secondary outline" onclick="location.reload();location.href='request-feedback.html'">Request
           </button>
         </div>
         <div class="table">

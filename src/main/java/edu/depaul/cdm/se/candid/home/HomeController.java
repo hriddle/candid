@@ -1,7 +1,10 @@
 package edu.depaul.cdm.se.candid.home;
 
 import edu.depaul.cdm.se.candid.feedback.FeedbackService;
-import edu.depaul.cdm.se.candid.feedback.repository.*;
+import edu.depaul.cdm.se.candid.feedback.repository.Feedback;
+import edu.depaul.cdm.se.candid.feedback.repository.FeedbackRequest;
+import edu.depaul.cdm.se.candid.feedback.repository.FeedbackRequestRepository;
+import edu.depaul.cdm.se.candid.feedback.repository.Question;
 import edu.depaul.cdm.se.candid.user.AuthenticatedUser;
 import edu.depaul.cdm.se.candid.user.UserService;
 import edu.depaul.cdm.se.candid.user.repository.User;
@@ -126,13 +129,46 @@ public class HomeController {
             .filter(user -> !user.getId().equals(loggedInUserId))
             .collect(Collectors.toMap(User::getId, user -> user.getProfile().getFullName()));
         model.addAttribute("userMap", userMap);
-        model.addAttribute("feedback", FeedbackRequest.builder().initiatorId(loggedInUserId).build());
+        model.addAttribute("feedback", new FeedbackRequest());
 
         return UI.REQUEST_FEEDBACK;
     }
 
+    @GetMapping("/feedback-requests")
+    public String getFeedbackRequests(Model model) {
+        Map<String, String> userMap = userService.findAll().stream()
+            .filter(user -> !user.getId().equals(loggedInUserId))
+            .collect(Collectors.toMap(User::getId, user -> user.getProfile().getFullName()));
+
+        List<FeedbackRequestModel> feedbackRequests = feedbackRequestRepository.findAllByRespondentId(loggedInUserId).stream()
+            .map(f -> FeedbackRequestModel.builder()
+                    .id(f.getId())
+                    .name(userMap.get(f.getInitiatorId()))
+                    .requestDate(formatFeedbackDate(f.getRequestDate()))
+                    .message(f.getMessage())
+                    .incomplete(!f.isCompleted())
+                    .build()
+            ).collect(Collectors.toList());
+        List<FeedbackRequestModel> requestedFeedback = feedbackRequestRepository.findAllByInitiatorId(loggedInUserId).stream()
+            .map(f -> FeedbackRequestModel.builder()
+                .id(f.getId())
+                .name(userMap.get(f.getRespondentId()))
+                .requestDate(formatFeedbackDate(f.getRequestDate()))
+                .message(f.getMessage())
+                .incomplete(!f.isCompleted())
+                .build()
+            ).collect(Collectors.toList());
+
+        AuthenticatedUser user = getAuthenticatedUser(loggedInUserId);
+        model.addAttribute("user", user);
+        model.addAttribute("updatedProfile", user.getUserProfile());
+        model.addAttribute("feedbackRequests", feedbackRequests);
+        model.addAttribute("requestedFeedback", requestedFeedback);
+        return UI.FEEDBACK_REQUESTS;
+    }
+
     @PostMapping("/feedback")
-    public String sendFeedback(@ModelAttribute SendFeedbackModel sendFeedbackModel) {
+    public String sendFeedback(@ModelAttribute("feedback") SendFeedbackModel sendFeedbackModel) {
 
         feedbackService.giveFeedbackToUser(Feedback.builder()
             .senderId(loggedInUserId)
@@ -149,8 +185,10 @@ public class HomeController {
     }
 
     @PostMapping("/feedbackRequest")
-    public String feedbackRequest(@ModelAttribute FeedbackRequest feedbackRequest) {
+    public String feedbackRequest(@ModelAttribute("feedback") FeedbackRequest feedbackRequest) {
         feedbackRequest.setInitiatorId(loggedInUserId);
+        feedbackRequest.setRequestDate(LocalDateTime.now());
+        feedbackRequest.setCompleted(false);
         feedbackRequestRepository.save(feedbackRequest);
         return redirectTo("/");
     }
